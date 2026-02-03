@@ -35,11 +35,10 @@ function init() {
  */
 function onStateChange(state) {
     const calc = calculateIngredients(state);
-    ui.renderResults(calc);
-    ui.renderWarnings(state.breadType, state.mode);
+    ui.renderResults(calc, state);
+    ui.renderStrategyInfo(state.breadType, state.mode);
     ui.renderTimeline(state.breadType, state.mode, calc);
     ui.renderInstructions(state.breadType, state.mode);
-    ui.updateResultTheme(state.breadType);
 }
 
 /**
@@ -54,13 +53,21 @@ function setupEventListeners(el) {
             breadType: breadType,
             hydration: system.defaults.hydration
         });
-        ui.updateActiveInput(stateManager.get('activeInput'), stateManager.state);
     });
+
+    // Mode buttons
+    el.btnOvernight.addEventListener('click', () => setMode('overnight'));
+    el.btnExpress.addEventListener('click', () => setMode('express'));
+    el.btnDirect.addEventListener('click', () => setMode('direct'));
+
+    // Yeast type buttons
+    el.btnYeastDry.addEventListener('click', () => setYeastType('dry'));
+    el.btnYeastFresh.addEventListener('click', () => setYeastType('fresh'));
 
     // Main slider
     el.mainSlider.addEventListener('input', (e) => {
         const val = parseInt(e.target.value);
-        const activeInput = stateManager.get('activeInput');
+        const activeInput = stateManager.get('activeInput') || 'flour';
         if (activeInput === 'flour') {
             stateManager.set('flour', val);
         } else {
@@ -73,18 +80,17 @@ function setupEventListeners(el) {
         stateManager.set('startTime', e.target.value);
     });
 
-    // Input container clicks (to switch active input)
-    el.containerFlour.addEventListener('click', () => activateInput('flour'));
-    el.containerHydration.addEventListener('click', () => activateInput('hydration'));
+    // Flour input container click
+    el.containerFlour.addEventListener('click', () => {
+        stateManager.set('activeInput', 'flour');
+        ui.updateActiveInput('flour', stateManager.state);
+    });
 
-    // Mode buttons
-    el.btnOvernight.addEventListener('click', () => setMode('overnight'));
-    el.btnExpress.addEventListener('click', () => setMode('express'));
-    el.btnDirect.addEventListener('click', () => setMode('direct'));
-
-    // Yeast type buttons
-    el.btnYeastDry.addEventListener('click', () => setYeastType('dry'));
-    el.btnYeastFresh.addEventListener('click', () => setYeastType('fresh'));
+    // Hydration input container click
+    el.containerHydration.addEventListener('click', () => {
+        stateManager.set('activeInput', 'hydration');
+        ui.updateActiveInput('hydration', stateManager.state);
+    });
 }
 
 /**
@@ -102,19 +108,6 @@ function setYeastType(type) {
     stateManager.set('yeastType', type);
     ui.updateYeastButtons(type);
 }
-
-/**
- * Activate flour or hydration input
- */
-function activateInput(input) {
-    stateManager.set('activeInput', input);
-    ui.updateActiveInput(input, stateManager.state);
-}
-
-// Expose functions for onclick handlers if needed
-window.setMode = setMode;
-window.setYeastType = setYeastType;
-window.activateInput = activateInput;
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', init);

@@ -1,109 +1,292 @@
 /* Neko Pan - Custom Styles */
-/* Only styles that DaisyUI doesn't cover */
+/* Kawaii bread calculator theme */
 
-/* Font override */
+/* Base font */
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Nunito', 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Input boxes with active state */
+/* Card container with shadow */
+.card-container {
+    background: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Input box with active state */
 .input-box {
-    border-radius: 0.75rem;
-    padding: 0.75rem;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-    background-color: oklch(var(--b2));
+    padding: 0.5rem 0;
+    transition: all 0.2s ease;
 }
 
-.input-box.active {
-    border-color: oklch(var(--p));
-    background-color: oklch(var(--p) / 0.1);
+.input-box.active .input-value-large {
+    color: #E8A84C;
 }
 
 /* Large input values */
-.input-value {
+.input-value-large {
     background: transparent;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: oklch(var(--bc));
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #4A3728;
     border: none;
     outline: none;
-    width: 100%;
+    width: 80px;
     padding: 0;
 }
 
-/* Results card themes */
-.result-card {
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
-    color: white;
-    transition: background-color 0.5s ease;
+/* Custom select styling */
+.select-neko {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: none;
+    border-bottom: 1px solid #E5E7EB;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4A3728;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23888888' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0 center;
+    background-repeat: no-repeat;
+    background-size: 1.25em 1.25em;
 }
 
-.result-card.theme-gray {
-    background-color: #111827;
+.select-neko:focus {
+    outline: none;
+    border-bottom-color: #E8A84C;
 }
 
-.result-card.theme-stone {
-    background-color: #44403c;
+/* Button group styling */
+.btn-group-neko {
+    display: flex;
+    background: #F3F4F6;
+    border-radius: 0.75rem;
+    padding: 4px;
+    gap: 4px;
 }
 
-/* Results glow effect */
-.results-glow {
-    position: absolute;
-    top: -2.5rem;
-    right: -2.5rem;
-    width: 8rem;
-    height: 8rem;
+.btn-neko {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6B7280;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-neko:hover {
+    color: #4A3728;
+}
+
+.btn-neko.active {
     background: white;
-    border-radius: 50%;
-    filter: blur(3rem);
-    opacity: 0.1;
-    pointer-events: none;
+    color: #4A3728;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Yeast row highlight */
-.yeast-highlight {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 0.25rem;
-    padding: 0.5rem;
-    margin: 0 -0.5rem;
+/* Small button group (for yeast toggle) */
+.btn-group-neko.small {
+    padding: 3px;
+    gap: 2px;
+}
+
+.btn-neko-sm {
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #92400E;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-neko-sm.active {
+    background: white;
+    color: #78350F;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom slider */
+.slider-neko {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #E5E7EB;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.slider-neko::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
+    background: #E8A84C;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(232, 168, 76, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.slider-neko::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.slider-neko::-moz-range-thumb {
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
+    background: #E8A84C;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 6px rgba(232, 168, 76, 0.4);
+}
+
+/* Time input */
+.time-input {
+    padding: 0.375rem 0.625rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4A3728;
+    background: white;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.time-input:focus {
+    outline: none;
+    border-color: #E8A84C;
+}
+
+/* Orange badge */
+.badge-orange {
+    display: inline-flex;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #E8A84C;
+    background: rgba(232, 168, 76, 0.15);
+    border-radius: 0.375rem;
 }
 
 /* Sugar row visibility */
-.sugar-row {
+#row-sugar {
     opacity: 0.5;
     transition: opacity 0.3s ease;
 }
 
-.sugar-row.visible {
+#row-sugar.visible {
     opacity: 1;
 }
 
-/* Timeline compact style */
-.timeline-compact .timeline-start {
+/* Timeline styling */
+.timeline-item {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.timeline-time {
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #E8A84C;
     min-width: 3rem;
 }
 
-.timeline-compact .timeline-box {
-    padding: 0.5rem 0.75rem;
-}
-
-/* Warning items in dark results section */
-.warning-item {
-    display: flex;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    line-height: 1.4;
-    align-items: flex-start;
-}
-
-.warning-icon {
+.timeline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #E8A84C;
+    margin-top: 0.25rem;
     flex-shrink: 0;
-    color: #fbbf24;
 }
 
-.warning-text {
-    color: #fbbf24;
+.timeline-content {
+    flex: 1;
+}
+
+.timeline-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #4A3728;
+}
+
+.timeline-desc {
+    font-size: 0.75rem;
+    color: #888888;
+    margin-top: 0.125rem;
+}
+
+/* Instructions steps */
+.step-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+}
+
+.step-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #E8A84C;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #4A3728;
+}
+
+.step-text {
+    font-size: 0.8rem;
+    color: #6B5344;
+    margin-top: 0.25rem;
+    line-height: 1.5;
+}
+
+/* Details/summary styling */
+details summary {
+    list-style: none;
+}
+
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+details[open] summary .text-neko-orange {
+    transform: rotate(180deg);
+}
+
+details summary .text-neko-orange {
+    transition: transform 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 400px) {
+    .input-value-large {
+        font-size: 1.5rem;
+    }
 }

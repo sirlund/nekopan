@@ -1,173 +1,240 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neko Pan - Calculadora Panadera</title>
 
-    <!-- DaisyUI + Tailwind via CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet">
+    <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neko: {
+                            bg: '#B8D4E3',
+                            card: '#FFFFFF',
+                            cream: '#FFF9F0',
+                            orange: '#E8A84C',
+                            'orange-dark': '#D4943A',
+                            brown: '#4A3728',
+                            'brown-light': '#6B5344',
+                            gray: '#888888',
+                            'gray-light': '#AAAAAA',
+                            warning: '#FFF3CD',
+                            'warning-border': '#FFDA6A',
+                            'warning-text': '#856404',
+                        }
+                    },
+                    fontFamily: {
+                        'neko': ['Nunito', 'Quicksand', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Nunito (rounded, friendly) -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Custom styles -->
     <link rel="stylesheet" href="css/custom.css">
 </head>
-<body class="bg-base-200 min-h-screen flex flex-col items-center p-4 md:p-10 font-sans">
+<body class="bg-neko-bg min-h-screen flex flex-col items-center p-4 md:p-8 font-neko">
 
-    <div class="card bg-base-100 shadow-xl w-full max-w-md overflow-hidden">
+    <div class="card-container w-full max-w-md">
 
-        <!-- Header -->
-        <div class="card-body pb-4 border-b border-base-200 bg-base-100/50">
-            <span class="text-[10px] font-bold text-base-content/50 uppercase tracking-wider">Neko Pan</span>
+        <!-- Header with Logo -->
+        <div class="bg-neko-cream rounded-t-3xl pt-6 pb-4 px-6 text-center relative">
+            <!-- Temperature Badge -->
+            <div class="absolute top-4 right-4">
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-neko-orange/30 text-xs font-semibold text-neko-orange">
+                    <span class="w-2 h-2 rounded-full bg-neko-orange"></span>
+                    &gt; 24°C
+                </span>
+            </div>
 
-            <div class="flex flex-col gap-4">
-                <!-- Bread Selector -->
-                <select id="breadTypeSelector" class="select select-bordered w-full font-semibold">
-                    <option value="ciabatta">Ciabatta Rustica (Horno)</option>
-                    <option value="churrasca">Churrasca / Naan (Sarten)</option>
-                </select>
+            <!-- Logo -->
+            <div class="w-24 h-24 mx-auto mb-3 rounded-full overflow-hidden bg-white shadow-lg border-4 border-neko-orange/20">
+                <img src="assets/logo.png" alt="Neko Pan" class="w-full h-full object-cover scale-125">
+            </div>
 
-                <!-- Mode Switch -->
-                <div>
-                    <span class="text-[10px] font-bold text-base-content/50 uppercase tracking-wider block mb-2">Cuando quieres hornear?</span>
-                    <div class="join w-full">
-                        <button class="join-item btn btn-sm flex-1 btn-active" id="btn-overnight">Manana</button>
-                        <button class="join-item btn btn-sm flex-1" id="btn-express">~8 horas</button>
-                        <button class="join-item btn btn-sm flex-1" id="btn-direct">Ya!</button>
-                    </div>
-                </div>
+            <!-- Title -->
+            <h1 class="text-2xl font-bold">
+                <span class="text-neko-brown">Neko Pan</span>
+                <span class="text-neko-orange">System</span>
+            </h1>
+            <p class="text-xs text-neko-gray mt-1">v10.0 · SANTIAGO_SUMMER_MODE</p>
+        </div>
+
+        <!-- Water Temperature Alert -->
+        <div class="bg-white px-6 py-3 border-t border-b border-gray-100">
+            <div class="flex items-center gap-2 text-sm text-neko-brown">
+                <span class="text-lg">🧊</span>
+                <span>Usa <strong>agua fría</strong> del refrigerador para controlar la fermentación.</span>
             </div>
         </div>
 
-        <!-- Controls -->
-        <div class="card-body">
-            <!-- Inputs Grid -->
-            <div class="grid grid-cols-2 gap-4">
+        <!-- Controls Section -->
+        <div class="bg-white px-6 py-5">
+            <div class="grid grid-cols-2 gap-x-6 gap-y-5">
+                <!-- Harina Base -->
                 <div id="container-flour" class="input-box active cursor-pointer">
-                    <span class="text-[10px] font-bold text-base-content/50 uppercase tracking-wider">Harina Base</span>
-                    <div class="flex items-baseline">
-                        <input type="number" id="flourInput" value="500" class="input-value" readonly>
-                        <span class="text-base-content/50 text-sm ml-1">g</span>
+                    <label class="text-sm font-medium text-neko-brown mb-1 block">Harina Base</label>
+                    <div class="flex items-baseline gap-2">
+                        <input type="number" id="flourInput" value="500" class="input-value-large" readonly>
+                        <span class="text-neko-orange font-bold text-sm">GR</span>
                     </div>
                 </div>
+
+                <!-- Hidratacion -->
                 <div id="container-hydration" class="input-box cursor-pointer">
-                    <span class="text-[10px] font-bold text-base-content/50 uppercase tracking-wider">Hidratacion</span>
-                    <div class="flex items-baseline">
-                        <input type="number" id="hydrationInput" value="82" class="input-value" readonly>
-                        <span class="text-base-content/50 text-sm ml-1">%</span>
+                    <label class="text-sm font-medium text-neko-brown mb-1 block">Hidratación</label>
+                    <div class="flex items-baseline gap-2">
+                        <input type="number" id="hydrationInput" value="82" class="input-value-large" readonly>
+                        <span class="text-neko-orange font-bold text-sm">%</span>
                     </div>
+                </div>
+
+                <!-- Producto -->
+                <div class="col-span-2">
+                    <label class="text-sm font-medium text-neko-brown mb-1 block">Producto</label>
+                    <select id="breadTypeSelector" class="select-neko">
+                        <option value="ciabatta">Ciabatta (82%)</option>
+                        <option value="churrasca">Churrasca (60%)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Estrategia - Button Group -->
+            <div class="mt-5">
+                <label class="text-sm font-medium text-neko-brown mb-2 block">Cuando quieres hornear?</label>
+                <div class="btn-group-neko">
+                    <button class="btn-neko active" id="btn-overnight">🌙 Mañana</button>
+                    <button class="btn-neko" id="btn-express">⏱️ ~8 horas</button>
+                    <button class="btn-neko" id="btn-direct">🔥 Ya!</button>
+                </div>
+            </div>
+
+            <!-- Levadura Toggle -->
+            <div class="mt-4 flex items-center justify-between bg-neko-warning/50 border border-neko-warning-border rounded-xl px-4 py-3">
+                <span class="text-sm font-semibold text-neko-brown">Tipo de Levadura</span>
+                <div class="btn-group-neko small">
+                    <button class="btn-neko-sm active" id="btn-yeast-dry">Seca</button>
+                    <button class="btn-neko-sm" id="btn-yeast-fresh">Fresca</button>
                 </div>
             </div>
 
             <!-- Slider -->
-            <div class="mt-4">
-                <div class="flex justify-between text-xs text-base-content/50 mb-2">
+            <div class="mt-5 pt-4 border-t border-gray-100">
+                <div class="flex justify-between text-xs text-neko-gray mb-2">
                     <span id="slider-label-min">200g</span>
-                    <span id="slider-label-action" class="text-primary font-medium">Ajustando Harina</span>
+                    <span id="slider-label-action" class="text-neko-orange font-semibold">Ajustando Harina</span>
                     <span id="slider-label-max">2000g</span>
                 </div>
-                <input type="range" id="mainSlider" class="range range-primary range-sm" min="200" max="2000" value="500" step="10">
-            </div>
-
-            <!-- Yeast Toggle -->
-            <div class="alert bg-warning/20 border border-warning/30 mt-4 py-3">
-                <span class="text-warning-content font-semibold text-sm">Tipo de Levadura</span>
-                <div class="join">
-                    <button class="join-item btn btn-xs btn-active" id="btn-yeast-dry">Seca</button>
-                    <button class="join-item btn btn-xs" id="btn-yeast-fresh">Fresca</button>
-                </div>
+                <input type="range" id="mainSlider" class="slider-neko" min="200" max="2000" value="500" step="10">
             </div>
         </div>
 
-        <!-- Results -->
-        <div id="result-card" class="result-card theme-gray">
-            <div class="results-glow"></div>
-
-            <div class="flex justify-between items-end mb-6 border-b border-white/10 pb-4 relative z-10">
-                <div>
-                    <h2 class="text-lg font-bold" id="result-title">Ciabatta Rustica</h2>
-                    <p class="text-xs text-white/60 mt-1" id="result-desc">18-24h Frio (Refri)</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[10px] text-white/50 uppercase tracking-wider">Masa Total</p>
-                    <p class="text-2xl font-bold font-mono" id="total-weight">0 g</p>
-                </div>
-            </div>
-
-            <div class="flex flex-col gap-3 font-mono text-sm relative z-10">
-                <div class="flex justify-between items-center py-1">
-                    <span class="text-white/60">Harina de Fuerza</span>
-                    <div class="flex items-center gap-4">
-                        <span class="text-white/40 text-[10px]">100%</span>
-                        <span class="font-bold w-16 text-right" id="res-flour">500 g</span>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center py-1">
-                    <span class="text-white/60">Agua <span class="badge badge-neutral badge-sm ml-1" id="water-temp-badge">Fria</span></span>
-                    <div class="flex items-center gap-4">
-                        <span class="text-white/40 text-[10px]" id="res-water-pct">82%</span>
-                        <span class="font-bold w-16 text-right" id="res-water">410 g</span>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center py-1">
-                    <span class="text-white/60">Sal</span>
-                    <div class="flex items-center gap-4">
-                        <span class="text-white/40 text-[10px]">2%</span>
-                        <span class="font-bold w-16 text-right" id="res-salt">10 g</span>
-                    </div>
-                </div>
-                <div class="yeast-highlight">
-                    <div class="flex justify-between items-center">
-                        <span class="text-warning" id="yeast-label">Levadura Seca</span>
-                        <div class="flex items-center gap-4">
-                            <span class="text-warning/60 text-[10px]" id="res-yeast-pct">0.2%</span>
-                            <span class="font-bold text-warning w-16 text-right" id="res-yeast">1 g</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center py-1 sugar-row" id="row-sugar">
-                    <span class="text-white/60">Azucar</span>
-                    <div class="flex items-center gap-4">
-                        <span class="text-white/40 text-[10px]" id="res-sugar-pct">0%</span>
-                        <span class="font-bold w-16 text-right" id="res-sugar">0 g</span>
-                    </div>
-                </div>
-                <div class="border-t border-white/10 mt-2 pt-2">
-                    <div class="flex justify-between items-center py-1">
-                        <span class="text-white/40 text-xs">Materia Grasa</span>
-                        <div class="flex items-center gap-4">
-                            <span class="text-white/30 text-[10px]" id="res-oil-pct">3%</span>
-                            <span class="text-white/60 w-16 text-right" id="res-oil">15 g</span>
-                        </div>
-                    </div>
-                    <p class="text-right text-[10px] text-white/30 italic mt-1">* 1 cda sopera = 13g</p>
-                </div>
-            </div>
-
-            <!-- Warnings -->
-            <div class="mt-4 pt-3 border-t border-white/10 flex flex-col gap-2 relative z-10" id="warnings-container"></div>
-        </div>
-
-        <!-- Timeline -->
-        <div class="bg-warning/10 border-t border-warning/30 p-6">
+        <!-- Ficha Técnica -->
+        <div class="bg-neko-cream px-6 py-5">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xs font-bold text-warning-content uppercase tracking-wider">Timeline</h3>
-                <div class="flex items-center gap-2">
-                    <label class="text-[10px] text-warning-content/70 font-medium" for="startTime">Inicio</label>
-                    <input type="time" id="startTime" class="input input-xs input-bordered bg-white font-mono font-semibold text-warning-content">
+                <h2 class="text-xs font-bold text-neko-gray uppercase tracking-widest">Ficha Técnica</h2>
+                <input type="time" id="startTime" class="time-input">
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                <!-- Harina Total -->
+                <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
+                    <span class="text-xs font-bold text-neko-gray uppercase tracking-wider">Harina Total</span>
+                    <span class="text-2xl font-extrabold text-neko-brown" id="res-flour">500g</span>
+                </div>
+
+                <!-- Agua -->
+                <div class="flex justify-between items-center py-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-neko-brown font-medium">Agua</span>
+                        <span class="badge-orange" id="res-water-pct">82%</span>
+                    </div>
+                    <span class="text-xl font-bold text-neko-orange" id="res-water">410g</span>
+                </div>
+
+                <!-- Levadura -->
+                <div class="flex justify-between items-center py-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-neko-brown font-medium">Levadura</span>
+                        <span class="badge-orange" id="res-yeast-pct">0.2%</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xl font-bold text-neko-orange" id="res-yeast">1g</span>
+                        <span class="block text-[10px] text-neko-orange uppercase" id="yeast-type-label">SECA</span>
+                    </div>
+                </div>
+
+                <!-- Sal & Aceite -->
+                <div class="py-2 text-sm text-neko-brown-light">
+                    <div class="flex justify-between">
+                        <span>Sal (2%)</span>
+                        <span class="font-semibold" id="res-salt">10g</span>
+                    </div>
+                    <div class="flex justify-between mt-1">
+                        <span>Aceite</span>
+                        <span class="font-semibold" id="res-oil">15g</span>
+                    </div>
+                    <div class="flex justify-between mt-1 text-neko-gray-light" id="row-sugar">
+                        <span>Azúcar</span>
+                        <span id="res-sugar">0g</span>
+                    </div>
+                </div>
+
+                <!-- Peso Total -->
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-100">
+                    <span class="text-sm font-bold text-neko-orange uppercase">Peso Masa</span>
+                    <span class="text-3xl font-extrabold text-neko-brown" id="total-weight">936g</span>
                 </div>
             </div>
-            <ul class="timeline timeline-vertical timeline-compact" id="timeline-container"></ul>
         </div>
 
-        <!-- Instructions -->
-        <div class="bg-base-200 p-6">
-            <h3 class="text-xs font-bold text-base-content/60 uppercase tracking-wider mb-4">Paso a Paso</h3>
-            <div id="instructions-container"></div>
+        <!-- Strategy Info -->
+        <div class="bg-white px-6 py-4 border-t border-gray-100">
+            <p class="text-sm text-neko-brown">
+                <strong>Estrategia:</strong> <span id="strategy-desc">Ferm. Lenta (Frío 18h+).</span>
+            </p>
+            <p class="text-sm text-neko-brown mt-1">
+                <strong>Proceso:</strong> <span id="process-desc">Pliegues x4 (cada 30min) → Frío.</span>
+            </p>
         </div>
+
+        <!-- Warning Tip -->
+        <div class="bg-white px-6 pb-5">
+            <div class="bg-neko-warning border border-neko-warning-border rounded-xl p-4">
+                <div class="flex gap-3">
+                    <span class="text-lg">⚠️</span>
+                    <p class="text-sm text-neko-warning-text" id="warning-text">
+                        <strong>Tip Deferred:</strong> Si pliegas mañana, atempera la masa 2hrs antes de hornear.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline (collapsible) -->
+        <details class="bg-neko-cream border-t border-gray-200">
+            <summary class="px-6 py-4 cursor-pointer text-xs font-bold text-neko-gray uppercase tracking-widest flex justify-between items-center">
+                <span>Timeline</span>
+                <span class="text-neko-orange">▼</span>
+            </summary>
+            <div class="px-6 pb-5" id="timeline-container"></div>
+        </details>
+
+        <!-- Instructions (collapsible) -->
+        <details class="bg-white border-t border-gray-200 rounded-b-3xl overflow-hidden">
+            <summary class="px-6 py-4 cursor-pointer text-xs font-bold text-neko-gray uppercase tracking-widest flex justify-between items-center">
+                <span>Paso a Paso</span>
+                <span class="text-neko-orange">▼</span>
+            </summary>
+            <div class="px-6 pb-5" id="instructions-container"></div>
+        </details>
 
     </div>
 
