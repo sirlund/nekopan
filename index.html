@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neko Pan - Calculadora Panadera</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+        }
+
+        @media (min-width: 768px) { body { padding: 2.5rem 1rem; } }
+
+        /* Card */
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f3f4f6;
+            background: rgba(249,250,251,0.5);
+        }
+        .header-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        .header-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Bread Selector */
+        .bread-selector {
+            width: 100%;
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: #111827;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            padding: 0.625rem 2rem 0.625rem 0.75rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+        }
+        .bread-selector:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+
+        /* 3-Way Switch */
+        .switch-container {
+            background-color: #f3f4f6;
+            padding: 4px;
+            border-radius: 12px;
+            display: inline-flex;
+            width: 100%;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .switch-btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #6b7280;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .switch-btn.active {
+            color: #1f2937;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Controls */
+        .controls {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .input-container {
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: #f9fafb;
+        }
+        .input-container.active-field {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+        }
+        .input-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+        .input-row { display: flex; align-items: baseline; }
+        .input-field {
+            width: 100%;
+            background: transparent;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            border: none;
+            outline: none;
+            padding: 0;
+        }
+        .input-unit { font-size: 0.875rem; font-weight: 500; color: #9ca3af; margin-left: 0.25rem; }
+
+        /* Yeast Toggle */
+        .yeast-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 0.5rem;
+            padding: 0.625rem 0.75rem;
+        }
+        .yeast-toggle-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #92400e;
+        }
+        .yeast-toggle {
+            display: flex;
+            background: #fef3c7;
+            border-radius: 8px;
+            padding: 3px;
+            gap: 2px;
+        }
+        .yeast-toggle-btn {
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #92400e;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .yeast-toggle-btn.active {
+            background: white;
+            color: #78350f;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Slider */
+        .slider-container { padding: 0.5rem 0 1rem; }
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .slider-labels .action { color: #6366f1; }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 0.5rem;
+            background: #e5e7eb;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px; width: 24px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-moz-range-thumb {
+            height: 24px; width: 24px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* Results Card */
+        .results {
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.5s ease;
+            color: white;
+        }
+        .results.theme-gray { background: #111827; }
+        .results.theme-stone { background: #44403c; }
+
+        .results-glow {
+            position: absolute;
+            top: -2.5rem; right: -2.5rem;
+            width: 8rem; height: 8rem;
+            background: white;
+            border-radius: 50%;
+            filter: blur(3rem);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+        .results-title { font-size: 1.125rem; font-weight: 700; }
+        .results-desc { font-size: 0.75rem; color: #9ca3af; margin-top: 0.25rem; }
+        .results-total-label { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
+        .results-total { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+        /* Ingredients */
+        .ingredients {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-family: ui-monospace, SFMono-Regular, monospace;
+            font-size: 0.875rem;
+            position: relative;
+            z-index: 10;
+        }
+        .ingredient-row { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0; }
+        .ingredient-name { color: #9ca3af; display: flex; align-items: center; gap: 0.5rem; }
+        .ingredient-values { display: flex; align-items: center; gap: 1rem; }
+        .ingredient-pct { color: #4b5563; font-size: 10px; }
+        .ingredient-amount { font-weight: 700; width: 4rem; text-align: right; font-variant-numeric: tabular-nums; }
+
+        .badge {
+            font-size: 9px;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            background: #1f2937;
+            color: #d1d5db;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        .yeast-row {
+            background: #1f2937;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            margin: 0 -0.5rem;
+        }
+        .yeast-row .ingredient-name,
+        .yeast-row .ingredient-amount { color: #facc15; font-weight: 500; }
+        .yeast-row .ingredient-pct { color: rgba(250,204,21,0.6); font-size: 0.75rem; }
+
+        .sugar-row { opacity: 0.5; transition: opacity 0.3s ease; }
+        .sugar-row.visible { opacity: 1; }
+
+        .oil-section { border-top: 1px solid #1f2937; margin-top: 0.5rem; padding-top: 0.5rem; }
+        .oil-section .ingredient-name { font-size: 0.75rem; color: #6b7280; }
+        .oil-section .ingredient-amount { color: #9ca3af; }
+        .oil-note { text-align: right; font-size: 10px; color: #4b5563; font-style: italic; margin-top: 0.25rem; }
+
+        /* Warnings */
+        .warnings-section {
+            position: relative;
+            z-index: 10;
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #374151;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .warning-item {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            align-items: flex-start;
+        }
+        .warning-icon { flex-shrink: 0; }
+        .warning-text { color: #fbbf24; }
+
+        /* Timeline */
+        .timeline-section {
+            background: #fefce8;
+            border-top: 1px solid #fde68a;
+            padding: 1.5rem;
+        }
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .timeline-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #92400e;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .time-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .time-picker-label {
+            font-size: 0.7rem;
+            color: #a16207;
+            font-weight: 500;
+        }
+        .time-picker {
+            padding: 4px 8px;
+            border: 1px solid #fde68a;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #78350f;
+            background: white;
+            font-family: ui-monospace, SFMono-Regular, monospace;
+        }
+        .time-picker:focus { outline: none; border-color: #f59e0b; }
+
+        .timeline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+        .timeline-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        .timeline-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 3.5rem;
+            flex-shrink: 0;
+        }
+        .timeline-time {
+            font-family: ui-monospace, SFMono-Regular, monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #92400e;
+        }
+        .timeline-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #f59e0b;
+            margin-top: 0.375rem;
+            flex-shrink: 0;
+        }
+        .timeline-line {
+            width: 2px;
+            flex-grow: 1;
+            background: #fde68a;
+            margin-top: 0.25rem;
+        }
+        .timeline-content { padding-bottom: 0.25rem; }
+        .timeline-step-title { font-size: 0.8rem; font-weight: 700; color: #78350f; }
+        .timeline-step-desc { font-size: 0.75rem; color: #a16207; line-height: 1.4; margin-top: 0.125rem; }
+
+        /* Instructions */
+        .instructions-section {
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 1.5rem;
+        }
+        .instructions-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        .instructions-list { display: flex; flex-direction: column; gap: 1rem; }
+        .step { display: flex; gap: 1rem; }
+        .step-circle {
+            min-width: 24px; height: 24px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: white; flex-shrink: 0;
+        }
+        .step-circle.theme-gray { background: #111827; }
+        .step-circle.theme-stone { background: #44403c; }
+        .step-title { font-size: 0.875rem; font-weight: 700; color: #111827; }
+        .step-text { font-size: 0.875rem; color: #4b5563; line-height: 1.6; margin-top: 0.25rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+
+        <!-- Header -->
+        <div class="header">
+            <label class="header-label">Neko Pan</label>
+            <div class="header-controls">
+                <select id="breadTypeSelector" class="bread-selector">
+                    <option value="ciabatta">Ciabatta Rustica (Horno)</option>
+                    <option value="churrasca">Churrasca / Naan (Sarten)</option>
+                </select>
+                <div>
+                    <label class="header-label" style="margin-bottom: 0.375rem;">Cuando quieres hornear?</label>
+                    <div class="switch-container">
+                        <button class="switch-btn active" onclick="setMode('overnight')" id="btn-overnight">Manana</button>
+                        <button class="switch-btn" onclick="setMode('express')" id="btn-express">~8 horas</button>
+                        <button class="switch-btn" onclick="setMode('direct')" id="btn-direct">Ya!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="inputs-grid">
+                <div id="container-flour" class="input-container active-field" onclick="activateInput('flour')">
+                    <label class="input-label">Harina Base</label>
+                    <div class="input-row">
+                        <input type="number" id="flourInput" value="500" class="input-field" readonly>
+                        <span class="input-unit">g</span>
+                    </div>
+                </div>
+                <div id="container-hydration" class="input-container" onclick="activateInput('hydration')">
+                    <label class="input-label">Hidratacion</label>
+                    <div class="input-row">
+                        <input type="number" id="hydrationInput" value="82" class="input-field" readonly>
+                        <span class="input-unit">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slider-container">
+                <div class="slider-labels">
+                    <span id="slider-label-min">100g</span>
+                    <span id="slider-label-action" class="action">Ajustando Harina</span>
+                    <span id="slider-label-max">2000g</span>
+                </div>
+                <input type="range" id="mainSlider">
+            </div>
+
+            <!-- Yeast Toggle -->
+            <div class="yeast-toggle-row">
+                <span class="yeast-toggle-label">Tipo de Levadura</span>
+                <div class="yeast-toggle">
+                    <button class="yeast-toggle-btn active" onclick="setYeastType('dry')" id="btn-yeast-dry">Seca</button>
+                    <button class="yeast-toggle-btn" onclick="setYeastType('fresh')" id="btn-yeast-fresh">Fresca</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="results theme-gray" id="result-card">
+            <div class="results-glow"></div>
+            <div class="results-header">
+                <div>
+                    <h2 class="results-title" id="result-title">Ciabatta Rustica</h2>
+                    <p class="results-desc" id="result-desc">18-24h Frio (Refri)</p>
+                </div>
+                <div style="text-align: right;">
+                    <p class="results-total-label">Masa Total</p>
+                    <p class="results-total" id="total-weight">0 g</p>
+                </div>
+            </div>
+
+            <div class="ingredients">
+                <div class="ingredient-row">
+                    <span class="ingredient-name">Harina de Fuerza</span>
+                    <div class="ingredient-values">
+                        <span class="ingredient-pct">100%</span>
+                        <span class="ingredient-amount" id="res-flour">500 g</span>
+                    </div>
+                </div>
+                <div class="ingredient-row">
+                    <span class="ingredient-name">Agua <span class="badge" id="water-temp-badge">Fria</span></span>
+                    <div class="ingredient-values">
+                        <span class="ingredient-pct" id="res-water-pct">82%</span>
+                        <span class="ingredient-amount" id="res-water">410 g</span>
+                    </div>
+                </div>
+                <div class="ingredient-row">
+                    <span class="ingredient-name">Sal</span>
+                    <div class="ingredient-values">
+                        <span class="ingredient-pct">2%</span>
+                        <span class="ingredient-amount" id="res-salt">10 g</span>
+                    </div>
+                </div>
+                <div class="ingredient-row yeast-row" id="yeast-row">
+                    <span class="ingredient-name" id="yeast-label">Levadura Seca</span>
+                    <div class="ingredient-values">
+                        <span class="ingredient-pct" id="res-yeast-pct">0.2%</span>
+                        <span class="ingredient-amount" id="res-yeast">1 g</span>
+                    </div>
+                </div>
+                <div class="ingredient-row sugar-row" id="row-sugar">
+                    <span class="ingredient-name">Azucar</span>
+                    <div class="ingredient-values">
+                        <span class="ingredient-pct" id="res-sugar-pct">0%</span>
+                        <span class="ingredient-amount" id="res-sugar">0 g</span>
+                    </div>
+                </div>
+                <div class="oil-section">
+                    <div class="ingredient-row">
+                        <span class="ingredient-name">Materia Grasa</span>
+                        <div class="ingredient-values">
+                            <span class="ingredient-pct" id="res-oil-pct">3%</span>
+                            <span class="ingredient-amount" id="res-oil">15 g</span>
+                        </div>
+                    </div>
+                    <p class="oil-note">* 1 cda sopera = 13g</p>
+                </div>
+            </div>
+
+            <!-- Warnings -->
+            <div class="warnings-section" id="warnings-container"></div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-section">
+            <div class="timeline-header">
+                <h3 class="timeline-title">Timeline</h3>
+                <div class="time-picker-wrapper">
+                    <label class="time-picker-label" for="startTime">Inicio</label>
+                    <input type="time" id="startTime" class="time-picker">
+                </div>
+            </div>
+            <div id="timeline-container" class="timeline-list"></div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-section">
+            <h3 class="instructions-title">Paso a Paso</h3>
+            <div id="instructions-container" class="instructions-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // === DATA ENGINE ===
+
+        const BREAD_SYSTEM = {
+            ciabatta: {
+                name: "Ciabatta Rustica",
+                icon: "",
+                defaults: { hydration: 82, minHyd: 75, maxHyd: 95 },
+                ratios: { salt: 0.02, oil: 0.03 },
+                theme: "gray"
+            },
+            churrasca: {
+                name: "Churrasca / Naan",
+                icon: "",
+                defaults: { hydration: 60, minHyd: 50, maxHyd: 70 },
+                ratios: { salt: 0.02, oil: 0.05 },
+                theme: "stone"
+            }
+        };
+
+        // Yeast % is ALWAYS stored as dry. Fresh = dry * 3
+        const FERMENTATION_MODES = {
+            overnight: {
+                label: "Manana",
+                yeastDry: 0.002,   // 0.2%
+                sugar: 0,
+                desc: "Fermentacion lenta 18-24h en frio",
+                temp: "Fria"
+            },
+            express: {
+                label: "~8 horas",
+                yeastDry: 0.004,   // 0.4%
+                sugar: 0,
+                desc: "~8h a temperatura ambiente",
+                temp: "Fria"
+            },
+            direct: {
+                label: "Ya!",
+                yeastDry: 0.012,   // 1.2%
+                sugar: 0.015,
+                desc: "Listo en 3-4h",
+                temp: "Tibia"
+            }
+        };
+
+        // Dynamic timeline builder — no static templates
+
+        const INSTRUCTIONS = {
+            ciabatta: {
+                common_mix: "Mezcla harina y agua. Deja reposar 20 min (Autolisis). Luego anade sal, levadura y aceite. Integra con mano mojada.",
+                common_fold: "Haz 3 series de pliegues (Coil Folds) cada 30 min para desarrollar fuerza.",
+                overnight_proof: "Cubre y guarda en el refrigerador por 18-24 horas. Sacar 2h antes de hornear para atemperar.",
+                express_proof: "Cubrir y dejar fermentar a temperatura ambiente ~8 horas (ej: preparar de noche, hornear de manana).",
+                direct_proof: "Deja fermentar en lugar calido 3-4 horas hasta que triplique volumen.",
+                shape: "Vuelca sobre mucha harina. NO desgasifiques. Corta rectangulos con rasqueta.",
+                bake: "Horno max (250C). 15 min con vapor (hielo), luego 15 min sin vapor para dorar."
+            },
+            churrasca: {
+                common_mix: "Mezcla todo junto y amasa bien por 5-8 min hasta tener una masa lisa y suave.",
+                common_fold: "Deja descansar la masa (bollo) tapada por 30 minutos para relajar el gluten.",
+                overnight_proof: "Guarda el bollo en bolsa/bowl aceitado en el refri hasta manana. Atemperar 1h antes de usar.",
+                express_proof: "Cubrir el bollo aceitado y dejar fermentar a ambiente ~8 horas.",
+                direct_proof: "Deja descansar 1 hora a temperatura ambiente.",
+                shape: "Haz bolitas de 60-80g. Estira delgadas con uslero. Pincha con tenedor.",
+                bake: "Sarten o parrilla muy caliente. Vuelta y vuelta hasta que se inflen y doren."
+            }
+        };
+
+        // === STATE ===
+        let state = {
+            breadType: 'ciabatta',
+            mode: 'overnight',
+            activeInput: 'flour',
+            flour: 500,
+            hydration: 82,
+            yeastType: 'dry' // 'dry' | 'fresh'
+        };
+
+        // === DOM ===
+        const el = {
+            breadSelector: document.getElementById('breadTypeSelector'),
+            inputs: {
+                flour: document.getElementById('flourInput'),
+                hydration: document.getElementById('hydrationInput'),
+                slider: document.getElementById('mainSlider'),
+                startTime: document.getElementById('startTime')
+            },
+            containers: {
+                flour: document.getElementById('container-flour'),
+                hydration: document.getElementById('container-hydration')
+            },
+            ui: {
+                btnOvernight: document.getElementById('btn-overnight'),
+                btnExpress: document.getElementById('btn-express'),
+                btnDirect: document.getElementById('btn-direct'),
+                btnYeastDry: document.getElementById('btn-yeast-dry'),
+                btnYeastFresh: document.getElementById('btn-yeast-fresh'),
+                resultCard: document.getElementById('result-card'),
+                resultTitle: document.getElementById('result-title'),
+                resultDesc: document.getElementById('result-desc'),
+                totalWeight: document.getElementById('total-weight'),
+                waterTempBadge: document.getElementById('water-temp-badge'),
+                yeastLabel: document.getElementById('yeast-label'),
+                rowSugar: document.getElementById('row-sugar'),
+                res: {
+                    flour: document.getElementById('res-flour'),
+                    water: document.getElementById('res-water'),
+                    waterPct: document.getElementById('res-water-pct'),
+                    salt: document.getElementById('res-salt'),
+                    yeast: document.getElementById('res-yeast'),
+                    yeastPct: document.getElementById('res-yeast-pct'),
+                    sugar: document.getElementById('res-sugar'),
+                    sugarPct: document.getElementById('res-sugar-pct'),
+                    oil: document.getElementById('res-oil'),
+                    oilPct: document.getElementById('res-oil-pct')
+                },
+                labels: {
+                    min: document.getElementById('slider-label-min'),
+                    max: document.getElementById('slider-label-max'),
+                    action: document.getElementById('slider-label-action')
+                },
+                warnings: document.getElementById('warnings-container'),
+                timeline: document.getElementById('timeline-container'),
+                instructions: document.getElementById('instructions-container')
+            }
+        };
+
+        // === HELPERS ===
+        function formatTime(date) {
+            return date.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', hour12: false });
+        }
+
+        function addMinutes(date, mins) {
+            return new Date(date.getTime() + mins * 60000);
+        }
+
+        function getStartDate() {
+            const val = el.inputs.startTime.value;
+            const now = new Date();
+            if (val) {
+                const [h, m] = val.split(':').map(Number);
+                now.setHours(h, m, 0, 0);
+            }
+            return now;
+        }
+
+        // Set time picker to current time
+        function initTimePicker() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            el.inputs.startTime.value = `${h}:${m}`;
+        }
+
+        // === LOGIC ===
+        function updateBreadSystem() {
+            state.breadType = el.breadSelector.value;
+            const system = BREAD_SYSTEM[state.breadType];
+            state.hydration = system.defaults.hydration;
+            el.inputs.hydration.value = state.hydration;
+            el.ui.resultCard.className = `results theme-${system.theme}`;
+            if (state.activeInput === 'hydration') activateInput('hydration');
+            calculate();
+        }
+
+        function activateInput(inputType) {
+            state.activeInput = inputType;
+            const system = BREAD_SYSTEM[state.breadType];
+            if (inputType === 'flour') {
+                el.containers.flour.classList.add('active-field');
+                el.containers.hydration.classList.remove('active-field');
+                setupSlider(200, 2000, 10, state.flour, "Ajustando Harina", "g");
+            } else {
+                el.containers.hydration.classList.add('active-field');
+                el.containers.flour.classList.remove('active-field');
+                setupSlider(system.defaults.minHyd, system.defaults.maxHyd, 1, state.hydration, "Ajustando Hidratacion", "%");
+            }
+        }
+
+        function setupSlider(min, max, step, value, label, unit) {
+            el.inputs.slider.min = min;
+            el.inputs.slider.max = max;
+            el.inputs.slider.step = step;
+            el.inputs.slider.value = value;
+            el.ui.labels.min.textContent = min + unit;
+            el.ui.labels.max.textContent = max + unit;
+            el.ui.labels.action.textContent = label;
+        }
+
+        function handleSliderInput() {
+            const val = parseInt(el.inputs.slider.value);
+            if (state.activeInput === 'flour') {
+                state.flour = val;
+                el.inputs.flour.value = val;
+            } else {
+                state.hydration = val;
+                el.inputs.hydration.value = val;
+            }
+            calculate();
+        }
+
+        function setMode(mode) {
+            state.mode = mode;
+            document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${mode}`).classList.add('active');
+            calculate();
+        }
+
+        function setYeastType(type) {
+            state.yeastType = type;
+            el.ui.btnYeastDry.classList.toggle('active', type === 'dry');
+            el.ui.btnYeastFresh.classList.toggle('active', type === 'fresh');
+            calculate();
+        }
+
+        function renderWarnings(breadType, mode) {
+            const warnings = [];
+
+            // Summer in Santiago: always cold water
+            if (mode.temp === 'Fria') {
+                warnings.push({ icon: '*', text: 'Verano en Santiago: usar agua bien fria (refri) para controlar fermentacion.' });
+            } else {
+                warnings.push({ icon: '*', text: 'Agua tibia (~30C). En verano cuidado: no usar caliente, solo tibia.' });
+            }
+
+            // Ciabatta: never knead
+            if (breadType === 'ciabatta') {
+                warnings.push({ icon: '*', text: 'La Ciabatta NO se amasa. Solo pliegues (coil folds).' });
+            }
+
+            // Overnight: recovery time
+            if (state.mode === 'overnight') {
+                warnings.push({ icon: '*', text: 'Sacar masa del refri 1-2h antes de hornear/cocinar para atemperar.' });
+            }
+
+            // Express: watch over-fermentation in summer
+            if (state.mode === 'express') {
+                warnings.push({ icon: '*', text: 'Express 8h en verano: vigilar que no sobrefermente. Si sube muy rapido, meter al refri.' });
+            }
+
+            el.ui.warnings.innerHTML = warnings.map(w => `
+                <div class="warning-item">
+                    <span class="warning-icon">${w.icon}</span>
+                    <span class="warning-text">${w.text}</span>
+                </div>
+            `).join('');
+        }
+
+        function buildTimeline(breadType, mode, calc) {
+            const steps = [];
+            const isCiabatta = breadType === 'ciabatta';
+            const yeastLabel = state.yeastType === 'fresh' ? 'levadura fresca' : 'levadura seca';
+            const sugarNote = mode === 'direct' ? `, ${calc.sugar}g azucar` : '';
+
+            if (isCiabatta) {
+                // Ciabatta: autolisis → integrar → pliegues → fermentacion → formado → coccion
+                steps.push({ offset: 0, title: "Mezcla + Autolisis", desc: `${calc.flour}g harina + ${calc.water}g agua (${calc.temp}). Reposar 20 min.` });
+                steps.push({ offset: 20, title: "Integrar", desc: `Anadir ${calc.salt}g sal, ${calc.yeast}g ${yeastLabel}${sugarNote} y ${calc.oil}g aceite. Mano mojada.` });
+                steps.push({ offset: 50, title: "Pliegue 1", desc: "Coil folds con manos mojadas." });
+                steps.push({ offset: 80, title: "Pliegue 2", desc: "Coil folds." });
+                steps.push({ offset: 110, title: "Pliegue 3", desc: "Ultimo pliegue. Cubrir." });
+
+                if (mode === 'overnight') {
+                    steps.push({ offset: 140, title: "-> Refrigerador", desc: "18-24h en frio. El sabor se desarrolla aqui." });
+                    steps.push({ offset: 1320, title: "Sacar del frio", desc: "Atemperar 2h antes de hornear." });
+                    steps.push({ offset: 1440, title: "Formado + Horno", desc: "Volcar sobre harina, cortar rectangulos. 250C, 15 min vapor + 15 min dorar." });
+                } else if (mode === 'express') {
+                    steps.push({ offset: 120, title: "Fermentar", desc: "Cubrir. ~8h a temperatura ambiente." });
+                    steps.push({ offset: 600, title: "Formado", desc: "Volcar sobre harina. NO desgasificar. Cortar rectangulos." });
+                    steps.push({ offset: 620, title: "Horno", desc: "250C. 15 min con vapor (hielo) + 15 min dorar." });
+                } else {
+                    steps.push({ offset: 120, title: "Fermentar", desc: "3-4h en lugar calido hasta triplicar volumen." });
+                    steps.push({ offset: 300, title: "Formado", desc: "Volcar sobre harina. NO desgasificar. Cortar rectangulos." });
+                    steps.push({ offset: 320, title: "Horno", desc: "250C. 15 min con vapor (hielo) + 15 min dorar." });
+                }
+            } else {
+                // Churrasca: mezcla rapida → reposo → fermentacion → formar + cocinar
+                steps.push({ offset: 0, title: "Mezcla", desc: `${calc.flour}g harina, ${calc.water}g agua (${calc.temp}), ${calc.salt}g sal, ${calc.yeast}g ${yeastLabel}${sugarNote}, ${calc.oil}g grasa. Amasar 5-8 min.` });
+                steps.push({ offset: 10, title: "Bolear", desc: "Formar bollo liso. Cubrir con pano." });
+
+                if (mode === 'overnight') {
+                    steps.push({ offset: 40, title: "-> Refrigerador", desc: "En bolsa/bowl aceitado hasta manana." });
+                    steps.push({ offset: 1320, title: "Sacar del frio", desc: "Atemperar 1h." });
+                    steps.push({ offset: 1380, title: "Formar + Cocinar", desc: "Bolitas 60-80g -> estirar -> sarten muy caliente." });
+                } else if (mode === 'express') {
+                    steps.push({ offset: 40, title: "Fermentar", desc: "Cubrir bollo aceitado. ~8h a ambiente." });
+                    steps.push({ offset: 520, title: "Formar + Cocinar", desc: "Bolitas 60-80g -> estirar con uslero -> sarten muy caliente." });
+                } else {
+                    steps.push({ offset: 40, title: "Reposo", desc: "1h a temperatura ambiente." });
+                    steps.push({ offset: 100, title: "Formar + Cocinar", desc: "Bolitas 60-80g -> estirar con uslero -> sarten muy caliente." });
+                }
+            }
+
+            return steps;
+        }
+
+        function renderTimeline(breadType, mode, calc) {
+            const steps = buildTimeline(breadType, mode, calc);
+            const startDate = getStartDate();
+
+            el.ui.timeline.innerHTML = steps.map((step, i) => {
+                const time = addMinutes(startDate, step.offset);
+                const isLast = i === steps.length - 1;
+                return `
+                    <div class="timeline-item">
+                        <div class="timeline-left">
+                            <span class="timeline-time">${formatTime(time)}</span>
+                            <div class="timeline-dot"></div>
+                            ${!isLast ? '<div class="timeline-line"></div>' : ''}
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-step-title">${step.title}</div>
+                            <div class="timeline-step-desc">${step.desc}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderInstructions(type, mode) {
+            const data = INSTRUCTIONS[type];
+            const system = BREAD_SYSTEM[type];
+            let steps = [];
+
+            steps.push({ title: "Mezcla", text: data.common_mix });
+            steps.push({ title: "Desarrollo", text: data.common_fold });
+
+            if (mode === 'overnight') steps.push({ title: "Fermentacion", text: data.overnight_proof });
+            else if (mode === 'express') steps.push({ title: "Fermentacion", text: data.express_proof });
+            else steps.push({ title: "Fermentacion", text: data.direct_proof });
+
+            steps.push({ title: "Formado", text: data.shape });
+            steps.push({ title: "Coccion", text: data.bake });
+
+            el.ui.instructions.innerHTML = steps.map((step, index) => `
+                <div class="step">
+                    <div class="step-circle theme-${system.theme}">${index + 1}</div>
+                    <div>
+                        <h4 class="step-title">${step.title}</h4>
+                        <p class="step-text">${step.text}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function calculate() {
+            const bread = BREAD_SYSTEM[state.breadType];
+            const mode = FERMENTATION_MODES[state.mode];
+            const isFresh = state.yeastType === 'fresh';
+
+            const flour = state.flour;
+            const water = flour * (state.hydration / 100);
+            const salt = flour * bread.ratios.salt;
+            const oil = flour * bread.ratios.oil;
+
+            const yeastDryPct = mode.yeastDry;
+            const yeastFreshPct = yeastDryPct * 3;
+            const activePct = isFresh ? yeastFreshPct : yeastDryPct;
+            const yeast = flour * activePct;
+
+            const sugar = flour * mode.sugar;
+            const total = flour + water + salt + oil + yeast + sugar;
+
+            // UI
+            el.ui.resultTitle.textContent = `${bread.icon} ${bread.name}`;
+            el.ui.resultDesc.textContent = mode.desc;
+            el.ui.totalWeight.textContent = Math.round(total) + ' g';
+            el.ui.waterTempBadge.textContent = mode.temp;
+            el.ui.yeastLabel.textContent = isFresh ? 'Levadura Fresca' : 'Levadura Seca';
+
+            el.ui.res.flour.textContent = Math.round(flour) + ' g';
+            el.ui.res.waterPct.textContent = state.hydration + '%';
+            el.ui.res.water.textContent = Math.round(water) + ' g';
+            el.ui.res.salt.textContent = Math.round(salt) + ' g';
+            el.ui.res.oilPct.textContent = (bread.ratios.oil * 100).toFixed(0) + '%';
+            el.ui.res.oil.textContent = Math.round(oil) + ' g';
+            el.ui.res.yeastPct.textContent = (activePct * 100).toFixed(1) + '%';
+            el.ui.res.yeast.textContent = yeast.toFixed(1).replace('.0', '') + ' g';
+
+            if (mode.sugar > 0) {
+                el.ui.rowSugar.classList.add('visible');
+                el.ui.res.sugarPct.textContent = (mode.sugar * 100).toFixed(1) + '%';
+                el.ui.res.sugar.textContent = sugar.toFixed(1).replace('.0', '') + ' g';
+            } else {
+                el.ui.rowSugar.classList.remove('visible');
+                el.ui.res.sugarPct.textContent = "0%";
+                el.ui.res.sugar.textContent = "0 g";
+            }
+
+            const calcValues = {
+                flour: Math.round(flour),
+                water: Math.round(water),
+                salt: Math.round(salt),
+                oil: Math.round(oil),
+                yeast: yeast.toFixed(1).replace('.0', ''),
+                sugar: sugar.toFixed(1).replace('.0', ''),
+                temp: mode.temp
+            };
+
+            renderWarnings(state.breadType, mode);
+            renderTimeline(state.breadType, state.mode, calcValues);
+            renderInstructions(state.breadType, state.mode);
+        }
+
+        // === LISTENERS ===
+        el.breadSelector.addEventListener('change', updateBreadSystem);
+        el.inputs.slider.addEventListener('input', handleSliderInput);
+        el.inputs.startTime.addEventListener('input', calculate);
+        el.inputs.flour.addEventListener('input', (e) => {
+            state.flour = parseFloat(e.target.value) || 0;
+            if (state.activeInput === 'flour') el.inputs.slider.value = state.flour;
+            calculate();
+        });
+
+        // === INIT ===
+        initTimePicker();
+        updateBreadSystem();
+        activateInput('flour');
+    </script>
+</body>
+</html>
