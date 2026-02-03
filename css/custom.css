@@ -1,0 +1,109 @@
+/* Neko Pan - Custom Styles */
+/* Only styles that DaisyUI doesn't cover */
+
+/* Font override */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Input boxes with active state */
+.input-box {
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    background-color: oklch(var(--b2));
+}
+
+.input-box.active {
+    border-color: oklch(var(--p));
+    background-color: oklch(var(--p) / 0.1);
+}
+
+/* Large input values */
+.input-value {
+    background: transparent;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: oklch(var(--bc));
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 0;
+}
+
+/* Results card themes */
+.result-card {
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    transition: background-color 0.5s ease;
+}
+
+.result-card.theme-gray {
+    background-color: #111827;
+}
+
+.result-card.theme-stone {
+    background-color: #44403c;
+}
+
+/* Results glow effect */
+.results-glow {
+    position: absolute;
+    top: -2.5rem;
+    right: -2.5rem;
+    width: 8rem;
+    height: 8rem;
+    background: white;
+    border-radius: 50%;
+    filter: blur(3rem);
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+/* Yeast row highlight */
+.yeast-highlight {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    margin: 0 -0.5rem;
+}
+
+/* Sugar row visibility */
+.sugar-row {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.sugar-row.visible {
+    opacity: 1;
+}
+
+/* Timeline compact style */
+.timeline-compact .timeline-start {
+    min-width: 3rem;
+}
+
+.timeline-compact .timeline-box {
+    padding: 0.5rem 0.75rem;
+}
+
+/* Warning items in dark results section */
+.warning-item {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    align-items: flex-start;
+}
+
+.warning-icon {
+    flex-shrink: 0;
+    color: #fbbf24;
+}
+
+.warning-text {
+    color: #fbbf24;
+}
